@@ -11,6 +11,9 @@ services:
     image: redis:alpine
   pgadmin:
     image: dpage/pgadmin4
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:latest
+
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
@@ -28,7 +31,6 @@ services:
     build:
       context: .
       dockerfile: Discount.API/Dockerfile
-  
 
   discount.grpc:
     image: ${DOCKER_REGISTRY-}discountgrpc
@@ -36,9 +38,20 @@ services:
       context: .
       dockerfile: Discount.Grpc/Dockerfile
 
+
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Ordering.API/Dockerfile
+
 volumes:
   mongo_data:
   portainer_data:
   postgres_data:
   pgadmin_data:
+
+
+
+
 
