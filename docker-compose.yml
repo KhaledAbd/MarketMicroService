@@ -44,6 +44,9 @@ services:
     build:
       context: .
       dockerfile: Ordering.API/Dockerfile
+  
+  rabbitmq:
+   image: rabbitmq:3-management
 
 volumes:
   mongo_data:
