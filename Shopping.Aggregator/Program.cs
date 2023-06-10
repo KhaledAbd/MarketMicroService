@@ -1,4 +1,26 @@
+
+using Shopping.Aggregator.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<ICatalogService, CatalogService>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ApiSettings:CatalogUrl"]);
+});
+builder.Services.AddHttpClient<IBasketService, BasketService>(c =>
+               c.BaseAddress = new Uri(builder.Configuration["ApiSettings:BasketUrl"]));
+builder.Services.AddHttpClient<IOrderService, OrderService>(c =>
+              c.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]));
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Shopping.Aggregator.API", Version = "v1" });
+});
+
+
+
 
 // Add services to the container.
 
@@ -6,27 +28,26 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseHttpsRedirection();
 
-app.MapGet("/weatherforecast", () =>
+
+if (app.Environment.IsDevelopment())
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
 });
 
-app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+app.UseSwaggerUI(options =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+app.Run();
