@@ -119,7 +119,21 @@
       ],
       "UpstreamPathTemplate": "/Order/{userName}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    //Shopping.Aggregator API
+    {
+      "DownstreamPathTemplate": "/api/v1/Shopping/{userName}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8005"
+        }
+      ],
+      "UpstreamPathTemplate": "/Shopping/{userName}",
+      "UpstreamHttpMethod": [ "GET" ]
     }
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5010"
