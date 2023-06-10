@@ -152,3 +152,10 @@ services:
       - basket.api
       - ordering.api
 
+
+  aspnetrunbasics:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
